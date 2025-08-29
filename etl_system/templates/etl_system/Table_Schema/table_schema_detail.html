@@ -1,0 +1,50 @@
+{% extends 'etl_system/base.html' %}
+
+{% block title %}Schema Details | ETL Manager{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Schema Details</h1>
+    <div>
+        <a href="{% url 'table_schema_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+        {% if perms.etl_system.change_tableschema %}
+        <a href="{% url 'table_schema_update' schema.SRCTBL_ID %}" class="btn btn-warning">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        {% endif %}
+        {% if perms.etl_system.delete_tableschema %}
+        <a href="{% url 'table_schema_delete' schema.SRCTBL_ID %}" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Delete
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0">{{ schema.TABLE_NM }}.{{ schema.COLUMN_NM }}</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Table and Column Information</h5>
+                <p><strong>Source Table ID:</strong> {{ schema.SRCTBL_ID }}</p>
+                <p><strong>Column Sequence:</strong> {{ schema.COLUMN_SEQ }}</p>
+                <p><strong>Source/Target Indicator:</strong> {{ schema.SRC_TRG_IND }}</p>
+                <p><strong>Schema Name:</strong> {{ schema.SCHEMA_NM }}</p>
+                <p><strong>Table Name:</strong> {{ schema.TABLE_NM }}</p>
+            </div>
+            <div class="col-md-6">
+                <h5>Column Details</h5>
+                <p><strong>Column Name:</strong> {{ schema.COLUMN_NM }}</p>
+                <p><strong>Data Type:</strong> {{ schema.DATA_TYPE }}</p>
+                <p><strong>Transformation:</strong> {{ schema.XFRMTN }}</p>
+                <p><strong>Primary Key:</strong> {{ schema.PRIMARY_KEY }}</p>
+                <p><strong>Default Value:</strong> {{ schema.DEFAULT_VAL }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

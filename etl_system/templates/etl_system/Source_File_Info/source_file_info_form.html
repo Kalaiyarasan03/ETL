@@ -1,0 +1,119 @@
+{% extends 'etl_system/base.html' %}
+
+{% block title %}
+{% if form.instance.SRCFILE_ID %}Edit Source File{% else %}Add Source File{% endif %} | ETL Manager
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{% if form.instance.SRCFILE_ID %}Edit Source File{% else %}Add Source File{% endif %}</h1>
+    <a href="{% url 'source_file_info_list' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to List
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Source File Information</h5>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="{{ form.DATASRC_ID.id_for_label }}" class="form-label">Data Source ID</label>
+                    {{ form.DATASRC_ID }}
+                    {% if form.DATASRC_ID.errors %}
+                    <div class="text-danger">
+                        {% for error in form.DATASRC_ID.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <h5 class="mt-4 mb-3">Source File Information</h5>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="{{ form.SRC_DIRECTORY.id_for_label }}" class="form-label">Source Directory</label>
+                    {{ form.SRC_DIRECTORY }}
+                    {% if form.SRC_DIRECTORY.errors %}
+                    <div class="text-danger">
+                        {% for error in form.SRC_DIRECTORY.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.SRC_FILENAME.id_for_label }}" class="form-label">Source Filename</label>
+                    {{ form.SRC_FILENAME }}
+                    {% if form.SRC_FILENAME.errors %}
+                    <div class="text-danger">
+                        {% for error in form.SRC_FILENAME.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <h5 class="mt-4 mb-3">Target Information</h5>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="{{ form.TGT_DATABASE.id_for_label }}" class="form-label">Target Database</label>
+                    {{ form.TGT_DATABASE }}
+                    {% if form.TGT_DATABASE.errors %}
+                    <div class="text-danger">
+                        {% for error in form.TGT_DATABASE.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.TGT_TABLENAME.id_for_label }}" class="form-label">Target Table Name</label>
+                    {{ form.TGT_TABLENAME }}
+                    {% if form.TGT_TABLENAME.errors %}
+                    <div class="text-danger">
+                        {% for error in form.TGT_TABLENAME.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="{{ form.SRCLAYOUT_ID.id_for_label }}" class="form-label">Source Layout ID</label>
+                    {{ form.SRCLAYOUT_ID }}
+                    {% if form.SRCLAYOUT_ID.errors %}
+                    <div class="text-danger">
+                        {% for error in form.SRCLAYOUT_ID.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.TRGLAYOUT_ID.id_for_label }}" class="form-label">Target Layout ID</label>
+                    {{ form.TRGLAYOUT_ID }}
+                    {% if form.TRGLAYOUT_ID.errors %}
+                    <div class="text-danger">
+                        {% for error in form.TRGLAYOUT_ID.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="{% url 'source_file_info_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

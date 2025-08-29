@@ -1,0 +1,47 @@
+{% extends 'etl_system/base.html' %}
+
+{% block title %}Credential Details | ETL Manager{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Database Credential Details</h1>
+    <div>
+        <a href="{% url 'database_cred_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+        {% if perms.etl_system.change_databasecred %}
+        <a href="{% url 'database_cred_update' credential.id %}" class="btn btn-warning">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        {% endif %}
+        {% if perms.etl_system.delete_databasecred %}
+        <a href="{% url 'database_cred_delete' credential.id %}" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Delete
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-danger text-white">
+        <h5 class="mb-0">{{ credential.db_type }} ({{ credential.db_role }})</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Database Information</h5>
+                <p><strong>Database Type:</strong> {{ credential.db_type }}</p>
+                <p><strong>Role:</strong> {{ credential.db_role }}</p>
+                <p><strong>Host:</strong> {{ credential.host }}</p>
+                <p><strong>Port:</strong> {{ credential. }}</p>
+                <p><strong>Database Name:</strong> {{ credential.database }}</p>
+            </div>
+            <div class="col-md-6">
+                <h5>Authentication</h5>
+                <p><strong>Username:</strong> {{ credential.username }}</p>
+                <p><strong>Password:</strong> ••••••••</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

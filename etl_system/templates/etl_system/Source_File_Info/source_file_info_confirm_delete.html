@@ -1,0 +1,26 @@
+{% extends 'etl_system/base.html' %}
+
+{% block title %}Delete Source File | ETL Manager{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Confirm Delete</h1>
+    <a href="{% url 'source_file_info_list' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to List
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header bg-danger text-white">
+        <h5 class="mb-0">Delete Source File</h5>
+    </div>
+    <div class="card-body">
+        <p>Are you sure you want to delete the source file "{{ object.SRC_FILENAME }}"?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Confirm Delete</button>
+            <a href="{% url 'source_file_info_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

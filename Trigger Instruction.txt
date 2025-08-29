@@ -1,0 +1,9 @@
+Activate environment using below command 
+
+       env\Scripts\activate
+
+
+To run Server 
+
+      python manage.py runserver
+

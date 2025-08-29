@@ -1,0 +1,67 @@
+{% extends 'etl_system/base.html' %}
+
+{% block title %}Table Schemas | ETL Manager{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Table Schemas</h1>
+    {% if perms.etl_system.add_tableschema %}
+    <a href="{% url 'table_schema_create' %}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Add Schema
+    </a>
+    {% endif %}
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if schemas %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Table ID</th>
+                        <th>Column Sequence</th>
+                        <th>Source/Target</th>
+                        <th>Schema</th>
+                        <th>Table</th>
+                        <th>Column</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for schema in schemas %}
+                    <tr>
+                        <td>{{ schema.SRCTBL_ID }}</td>
+                        <td>{{ schema.COLUMN_SEQ }}</td>
+                        <td>{{ schema.SRC_TRG_IND }}</td>
+                        <td>{{ schema.SCHEMA_NM }}</td>
+                        <td>{{ schema.TABLE_NM }}</td>
+                        <td>{{ schema.COLUMN_NM }}</td>
+                        <td>
+                            <a href="{% url 'table_schema_detail' schema.SRCTBL_ID %}" class="btn btn-sm btn-info">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            {% if perms.etl_system.change_tableschema %}
+                            <a href="{% url 'table_schema_update' schema.SRCTBL_ID %}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            {% endif %}
+                            {% if perms.etl_system.delete_tableschema %}
+                            <a href="{% url 'table_schema_delete' schema.SRCTBL_ID %}" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            No table schemas found. {% if perms.etl_system.add_tableschema %}<a href="{% url 'table_schema_create' %}">Create one</a>{% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

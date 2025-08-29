@@ -1,0 +1,274 @@
+{% extends 'etl_system/base.html' %}
+
+{% block title %}Dashboard | ETL Manager{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="mb-4">ETL Management Dashboard</h1>
+            <p class="lead">Welcome to the ETL Management System. Follow the ETL process flow below.</p>
+        </div>
+    </div>
+    
+    <!-- ETL Operations Section (New) -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">ETL Operations</h4>
+                </div>
+                <div class="card-body py-4">
+                    <div class="row justify-content-center">
+                        <div class="col-md-4 text-center">
+                            <div class="card card-dashboard h-100 border-primary mb-3">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="mb-0">Execute ETL</h5>
+                                </div>
+                                <div class="card-body">
+                                    <i class="fas fa-play fa-3x mb-3 text-primary"></i>
+                                    <p>Run ETL processes for your data sources</p>
+                                    <a href="{% url 'etl_execution' %}" class="btn btn-primary mt-2">
+                                        <i class="fas fa-play me-1"></i> Execute ETL
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 text-center">
+                            <div class="card card-dashboard h-100 border-info mb-3">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0">View Data</h5>
+                                </div>
+                                <div class="card-body">
+                                    <i class="fas fa-eye fa-3x mb-3 text-info"></i>
+                                    <p>Browse and analyze your loaded data</p>
+                                    <a href="{% url 'data_viewer' %}" class="btn btn-info mt-2">
+                                        <i class="fas fa-eye me-1"></i> View Data
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 text-center">
+                            <div class="card card-dashboard h-100 border-success mb-3">
+                                <div class="card-header bg-success text-white">
+                                    <h5 class="mb-0">Monitor Progress</h5>
+                                </div>
+                                <div class="card-body">
+                                    <i class="fas fa-chart-line fa-3x mb-3 text-success"></i>
+                                    <p>Track ETL execution status and logs</p>
+                                    <button class="btn btn-success mt-2" onclick="showSystemStatus()">
+                                        <i class="fas fa-chart-line me-1"></i> View Status
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ETL Process Vertical Flowchart -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h4 class="mb-0">ETL Configuration Flow</h4>
+                </div>
+                <div class="card-body py-5">
+                    <!-- Top Level: Data Sources -->
+                    <div class="row justify-content-center mb-4">
+                        <div class="col-md-4 text-center">
+                            <div class="card card-dashboard h-100 border-primary mb-3">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="mb-0">Data Sources</h5>
+                                </div>
+                                <div class="card-body">
+                                    <i class="fas fa-database fa-3x mb-3 text-primary"></i>
+                                    <p>Define source systems and connections</p>
+                                    <h4>{{ source_info_count }}</h4>
+                                    <a href="{% url 'source_info_list' %}" class="btn btn-primary mt-2">Manage Sources</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Vertical Arrow -->
+                    <div class="row justify-content-center mb-2">
+                        <div class="col-md-1 text-center">
+                            <i class="fas fa-arrow-down fa-2x text-muted"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Middle Level: Split into Table Mappings and Source Files (side by side) -->
+                    <div class="row justify-content-center mb-4">
+                        <!-- Left branch: Table Mappings -->
+                        <div class="col-md-4 text-center">
+                            <div class="card card-dashboard h-100 border-success mb-3">
+                                <div class="card-header bg-success text-white">
+                                    <h5 class="mb-0">Table Mappings</h5>
+                                </div>
+                                <div class="card-body">
+                                    <i class="fas fa-table fa-3x mb-3 text-success"></i>
+                                    <p>Map source to target tables</p>
+                                    <h4>{{ table_info_count }}</h4>
+                                    <a href="{% url 'table_info_list' %}" class="btn btn-success mt-2">Manage Tables</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right branch: Source Files -->
+                        <div class="col-md-4 text-center">
+                            <div class="card card-dashboard h-100 border-warning mb-3">
+                                <div class="card-header bg-warning text-dark">
+                                    <h5 class="mb-0">Source Files</h5>
+                                </div>
+                                <div class="card-body">
+                                    <i class="fas fa-file-alt fa-3x mb-3 text-warning"></i>
+                                    <p>Configure file extraction settings</p>
+                                    <h4>{{ source_file_count }}</h4>
+                                    <a href="{% url 'source_file_info_list' %}" class="btn btn-warning mt-2">Manage Files</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Vertical Arrows coming from both middle cards -->
+                    <div class="row justify-content-center mb-2">
+                        <div class="col-md-4 text-center">
+                            <i class="fas fa-arrow-down fa-2x text-muted"></i>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <i class="fas fa-arrow-down fa-2x text-muted"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Bottom Level: Table Schemas -->
+                    <div class="row justify-content-center">
+                        <div class="col-md-4 text-center">
+                            <div class="card card-dashboard h-100 border-info mb-3">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0">Table Schemas</h5>
+                                </div>
+                                <div class="card-body">
+                                    <i class="fas fa-sitemap fa-3x mb-3 text-info"></i>
+                                    <p>Define column mappings and transformations</p>
+                                    <h4>{{ table_schema_count }}</h4>
+                                    <a href="{% url 'table_schema_list' %}" class="btn btn-info mt-2">Manage Schemas</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if perms.etl_system.view_databasecred %}
+    <!-- Admin Configuration -->
+    <div class="row mt-2">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h4 class="mb-0">Admin Configuration</h4>
+                </div>
+                <div class="card-body py-4">
+                    <div class="row justify-content-center">
+                        <div class="col-md-4 text-center">
+                            <div class="card card-dashboard h-100 border-danger mb-3">
+                                <div class="card-header bg-danger text-white">
+                                    <h5 class="mb-0">Database Credentials</h5>
+                                </div>
+                                <div class="card-body">
+                                    <i class="fas fa-key fa-3x mb-3 text-danger"></i>
+                                    <p>Manage database connection credentials</p>
+                                    <h4>{{ database_cred_count }}</h4>
+                                    <a href="{% url 'database_cred_list' %}" class="btn btn-danger mt-2">Manage Credentials</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- System Status Modal -->
+<div class="modal fade" id="systemStatusModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">System Status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Configuration Status</h6>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Data Sources
+                                <span class="badge bg-primary rounded-pill">{{ source_info_count }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Table Mappings
+                                <span class="badge bg-success rounded-pill">{{ table_info_count }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Source Files
+                                <span class="badge bg-warning rounded-pill">{{ source_file_count }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Table Schemas
+                                <span class="badge bg-info rounded-pill">{{ table_schema_count }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Quick Actions</h6>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'etl_execution' %}" class="btn btn-primary">
+                                <i class="fas fa-play me-1"></i> Execute ETL
+                            </a>
+                            <a href="{% url 'data_viewer' %}" class="btn btn-info">
+                                <i class="fas fa-eye me-1"></i> View Data
+                            </a>
+                            {% if perms.etl_system.view_databasecred %}
+                            <a href="{% url 'database_cred_list' %}" class="btn btn-danger">
+                                <i class="fas fa-key me-1"></i> Manage Credentials
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card-dashboard {
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card-dashboard:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function showSystemStatus() {
+        const modal = new bootstrap.Modal(document.getElementById('systemStatusModal'));
+        modal.show();
+    }
+</script>
+{% endblock %}

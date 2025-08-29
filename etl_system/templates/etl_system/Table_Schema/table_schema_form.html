@@ -1,0 +1,152 @@
+{% extends 'etl_system/base.html' %}
+
+{% block title %}
+{% if form.instance.SRCTBL_ID %}Edit Schema{% else %}Add Schema{% endif %} | ETL Manager
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{% if form.instance.SRCTBL_ID %}Edit Schema{% else %}Add Schema{% endif %}</h1>
+    <a href="{% url 'table_schema_list' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to List
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Table Schema Information</h5>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="{{ form.SRCTBL_ID.id_for_label }}" class="form-label">Source Table ID</label>
+                    {{ form.SRCTBL_ID }}
+                    {% if form.SRCTBL_ID.errors %}
+                    <div class="text-danger">
+                        {% for error in form.SRCTBL_ID.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.COLUMN_SEQ.id_for_label }}" class="form-label">Column Sequence</label>
+                    {{ form.COLUMN_SEQ }}
+                    {% if form.COLUMN_SEQ.errors %}
+                    <div class="text-danger">
+                        {% for error in form.COLUMN_SEQ.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.SRC_TRG_IND.id_for_label }}" class="form-label">Source/Target Indicator</label>
+                    {{ form.SRC_TRG_IND }}
+                    {% if form.SRC_TRG_IND.errors %}
+                    <div class="text-danger">
+                        {% for error in form.SRC_TRG_IND.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <h5 class="mt-4 mb-3">Table Information</h5>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="{{ form.SCHEMA_NM.id_for_label }}" class="form-label">Schema Name</label>
+                    {{ form.SCHEMA_NM }}
+                    {% if form.SCHEMA_NM.errors %}
+                    <div class="text-danger">
+                        {% for error in form.SCHEMA_NM.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.TABLE_NM.id_for_label }}" class="form-label">Table Name</label>
+                    {{ form.TABLE_NM }}
+                    {% if form.TABLE_NM.errors %}
+                    <div class="text-danger">
+                        {% for error in form.TABLE_NM.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <h5 class="mt-4 mb-3">Column Information</h5>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="{{ form.COLUMN_NM.id_for_label }}" class="form-label">Column Name</label>
+                    {{ form.COLUMN_NM }}
+                    {% if form.COLUMN_NM.errors %}
+                    <div class="text-danger">
+                        {% for error in form.COLUMN_NM.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.DATA_TYPE.id_for_label }}" class="form-label">Data Type</label>
+                    {{ form.DATA_TYPE }}
+                    {% if form.DATA_TYPE.errors %}
+                    <div class="text-danger">
+                        {% for error in form.DATA_TYPE.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="{{ form.XFRMTN.id_for_label }}" class="form-label">Transformation</label>
+                    {{ form.XFRMTN }}
+                    {% if form.XFRMTN.errors %}
+                    <div class="text-danger">
+                        {% for error in form.XFRMTN.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-3">
+                    <label for="{{ form.PRIMARY_KEY.id_for_label }}" class="form-label">Primary Key</label>
+                    {{ form.PRIMARY_KEY }}
+                    {% if form.PRIMARY_KEY.errors %}
+                    <div class="text-danger">
+                        {% for error in form.PRIMARY_KEY.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-3">
+                    <label for="{{ form.DEFAULT_VAL.id_for_label }}" class="form-label">Default Value</label>
+                    {{ form.DEFAULT_VAL }}
+                    {% if form.DEFAULT_VAL.errors %}
+                    <div class="text-danger">
+                        {% for error in form.DEFAULT_VAL.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="{% url 'table_schema_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'etl_system/base.html' %}
+
+{% block title %}Source Details | ETL Manager{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Source Details</h1>
+    <div>
+        <a href="{% url 'source_info_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+        {% if perms.etl_system.change_sourceinfo %}
+        <a href="{% url 'source_info_update' source.SOURCE_ID %}" class="btn btn-warning">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        {% endif %}
+        {% if perms.etl_system.delete_sourceinfo %}
+        <a href="{% url 'source_info_delete' source.SOURCE_ID %}" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Delete
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0">{{ source.SOURCE_NM }}</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Source ID:</strong> {{ source.SOURCE_ID }}</p>
+                <p><strong>Source Name:</strong> {{ source.SOURCE_NM }}</p>
+                <p><strong>Source Type:</strong> {{ source.SOURCE_TYP }}</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>User ID:</strong> {{ source.USERID }}</p>
+                <p><strong>Extract Method:</strong> {{ source.EXTRCT_MTHD }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

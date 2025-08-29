@@ -1,0 +1,121 @@
+{% extends 'etl_system/base.html' %}
+
+{% block title %}
+{% if form.instance.id %}Edit Credential{% else %}Add Credential{% endif %} | ETL Manager
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{% if form.instance.id %}Edit Credential{% else %}Add Credential{% endif %}</h1>
+    <a href="{% url 'database_cred_list' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to List
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Database Credential Information</h5>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="{{ form.db_type.id_for_label }}" class="form-label">Database Type</label>
+                    {{ form.db_type }}
+                    {% if form.db_type.errors %}
+                    <div class="text-danger">
+                        {% for error in form.db_type.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <small class="form-text text-muted">e.g., mysql, postgres, sqlserver, oracle</small>
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.db_role.id_for_label }}" class="form-label">Database Role</label>
+                    {{ form.db_role }}
+                    {% if form.db_role.errors %}
+                    <div class="text-danger">
+                        {% for error in form.db_role.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <small class="form-text text-muted">e.g., source or destination</small>
+                </div>
+            </div>
+            
+            <h5 class="mt-4 mb-3">Connection Information</h5>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="{{ form.host.id_for_label }}" class="form-label">Host</label>
+                    {{ form.host }}
+                    {% if form.host.errors %}
+                    <div class="text-danger">
+                        {% for error in form.host.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.port.id_for_label }}" class="form-label">Port</label>
+                    {{ form.port }}
+                    {% if form.port.errors %}
+                    <div class="text-danger">
+                        {% for error in form..errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <label for="{{ form.database.id_for_label }}" class="form-label">Database Name</label>
+                    {{ form.database }}
+                    {% if form.database.errors %}
+                    <div class="text-danger">
+                        {% for error in form.database.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <h5 class="mt-4 mb-3">Authentication</h5>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                    <div class="text-danger">
+                        {% for error in form.username.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                    <div class="text-danger">
+                        {% for error in form.password.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="{% url 'database_cred_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,227 @@
+{% extends 'etl_system/base.html' %}
+{% load etl_filters %}
+
+{% block title %}{{ table_info.TGT_TABLENAME }} Data | ETL Manager{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1>{{ table_info.TGT_TABLENAME }} Data</h1>
+        <p class="text-muted mb-0">
+            <i class="fas fa-database me-1"></i>
+            {{ table_info.TGT_DATABASE }}{% if table_info.TGT_SCHEMA %}.{{ table_info.TGT_SCHEMA }}{% endif %}.{{ table_info.TGT_TABLENAME }}
+        </p>
+    </div>
+    <div>
+        <a href="{% url 'data_viewer' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Tables
+        </a>
+        <a href="{% url 'export_table_data' table_info.SRCTBL_ID %}" class="btn btn-success">
+            <i class="fas fa-download"></i> Export CSV
+        </a>
+        <button class="btn btn-info" onclick="location.reload()">
+            <i class="fas fa-sync-alt"></i> Refresh
+        </button>
+    </div>
+</div>
+
+<!-- Search and Filter Controls -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label for="search" class="form-label">Search</label>
+                <input type="text" class="form-control" id="search" name="search" 
+                       value="{{ search }}" placeholder="Search in text columns...">
+            </div>
+            <div class="col-md-2">
+                <label for="per_page" class="form-label">Rows per page</label>
+                <select class="form-select" id="per_page" name="per_page">
+                    <option value="25" {% if per_page == 25 %}selected{% endif %}>25</option>
+                    <option value="50" {% if per_page == 50 %}selected{% endif %}>50</option>
+                    <option value="100" {% if per_page == 100 %}selected{% endif %}>100</option>
+                    <option value="250" {% if per_page == 250 %}selected{% endif %}>250</option>
+                </select>
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary me-2">
+                    <i class="fas fa-search"></i> Apply
+                </button>
+                <a href="{% url 'view_table_data' table_info.SRCTBL_ID %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-times"></i> Clear
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Data Display -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Table Data</h5>
+        <span class="pagination-info">
+            {% if pagination.total_count > 0 %}
+                Showing {{ pagination.page|add:"-1"|mul:pagination.per_page|add:"1" }} to 
+                {% with end_row=pagination.page|mul:pagination.per_page %}
+                    {% if end_row > pagination.total_count %}{{ pagination.total_count }}{% else %}{{ end_row }}{% endif %}
+                {% endwith %}
+                of {{ pagination.total_count }} rows
+            {% else %}
+                No data found
+            {% endif %}
+        </span>
+    </div>
+    <div class="card-body p-0">
+        {% if data %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        {% for column in columns %}
+                        <th scope="col">{{ column }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                    <tr>
+                        <td>{{ forloop.counter0|add:pagination.page|add:"-1"|mul:pagination.per_page|add:"1" }}</td>
+                        {% for column in columns %}
+                        <td>
+                            {% with value=row|get_item:column %}
+                                {% if value == None %}
+                                    <span class="text-muted fst-italic">NULL</span>
+                                {% elif value == "" %}
+                                    <span class="text-muted fst-italic">Empty</span>
+                                {% else %}
+                                    {{ value|truncatechars:100 }}
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-database fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No Data Available</h5>
+            <p class="text-muted">
+                {% if search %}
+                    No records match your search criteria.
+                {% else %}
+                    This table appears to be empty or has not been loaded yet.
+                {% endif %}
+            </p>
+            {% if not search %}
+            <a href="{% url 'etl_execution' %}" class="btn btn-primary">
+                <i class="fas fa-play"></i> Execute ETL
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Simple Pagination -->
+{% if pagination.total_pages > 1 %}
+<nav aria-label="Table pagination" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if pagination.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1{% if search %}&search={{ search }}{% endif %}{% if per_page != 50 %}&per_page={{ per_page }}{% endif %}">
+                &laquo; First
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ pagination.previous_page }}{% if search %}&search={{ search }}{% endif %}{% if per_page != 50 %}&per_page={{ per_page }}{% endif %}">
+                &lsaquo; Previous
+            </a>
+        </li>
+        {% endif %}
+        
+        <li class="page-item active">
+            <span class="page-link">
+                Page {{ pagination.page }} of {{ pagination.total_pages }}
+            </span>
+        </li>
+        
+        {% if pagination.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ pagination.next_page }}{% if search %}&search={{ search }}{% endif %}{% if per_page != 50 %}&per_page={{ per_page }}{% endif %}">
+                Next &rsaquo;
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ pagination.total_pages }}{% if search %}&search={{ search }}{% endif %}{% if per_page != 50 %}&per_page={{ per_page }}{% endif %}">
+                Last &raquo;
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+<!-- Table Information -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0">Table Information</h6>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Source Table:</dt>
+                    <dd class="col-sm-8">{{ table_info.SRC_DATABASE }}.{{ table_info.SRC_SCHEMA }}.{{ table_info.SRC_TABLENAME }}</dd>
+                    
+                    <dt class="col-sm-4">Target Table:</dt>
+                    <dd class="col-sm-8">{{ table_info.TGT_DATABASE }}{% if table_info.TGT_SCHEMA %}.{{ table_info.TGT_SCHEMA }}{% endif %}.{{ table_info.TGT_TABLENAME }}</dd>
+                    
+                    <dt class="col-sm-4">Total Rows:</dt>
+                    <dd class="col-sm-8">{{ pagination.total_count|default:"N/A" }}</dd>
+                    
+                    <dt class="col-sm-4">Columns:</dt>
+                    <dd class="col-sm-8">{{ columns|length|default:"N/A" }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h6 class="mb-0">Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'table_info_detail' table_info.SRCTBL_ID %}" class="btn btn-outline-primary">
+                        <i class="fas fa-info-circle me-2"></i> Table Details
+                    </a>
+                    <a href="{% url 'table_schema_list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-sitemap me-2"></i> View Schema
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-submit form on per_page change
+    document.getElementById('per_page').addEventListener('change', function() {
+        this.form.submit();
+    });
+    
+    // Handle search form submission
+    document.getElementById('search').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            this.form.submit();
+        }
+    });
+</script>
+{% endblock %}

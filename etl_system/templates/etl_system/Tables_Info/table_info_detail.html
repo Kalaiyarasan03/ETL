@@ -1,0 +1,56 @@
+{% extends 'etl_system/base.html' %}
+
+{% block title %}Table Mapping Details | ETL Manager{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Table Mapping Details</h1>
+    <div>
+        <a href="{% url 'table_info_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+        {% if perms.etl_system.change_tableinfo %}
+        <a href="{% url 'table_info_update' table.SRCTBL_ID %}" class="btn btn-warning">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        {% endif %}
+        {% if perms.etl_system.delete_tableinfo %}
+        <a href="{% url 'table_info_delete' table.SRCTBL_ID %}" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Delete
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0">{{ table.SRC_TABLENAME }} → {{ table.TGT_TABLENAME }}</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Source Information</h5>
+                <p><strong>Source Table ID:</strong> {{ table.SRCTBL_ID }}</p>
+                <p><strong>Data Source ID:</strong> {{ table.DATASRC_ID }}</p>
+                <p><strong>Database:</strong> {{ table.SRC_DATABASE }}</p>
+                <p><strong>Schema:</strong> {{ table.SRC_SCHEMA }}</p>
+                <p><strong>Table Name:</strong> {{ table.SRC_TABLENAME }}</p>
+            </div>
+            <div class="col-md-6">
+                <h5>Target Information</h5>
+                <p><strong>Database:</strong> {{ table.TGT_DATABASE }}</p>
+                <p><strong>Schema:</strong> {{ table.TGT_SCHEMA }}</p>
+                <p><strong>Table Name:</strong> {{ table.TGT_TABLENAME }}</p>
+                <p><strong>Refresh Frequency:</strong> 
+                    {% if table.REF_FRQNCY %}
+                        <span class="badge bg-info">{{ table.REF_FRQNCY }}</span>
+                    {% else %}
+                        <span class="text-muted">Not specified</span>
+                    {% endif %}
+                </p>
+                <p><strong>Select Query:</strong> {{ table.FILTER_COND }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

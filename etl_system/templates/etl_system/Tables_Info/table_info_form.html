@@ -1,0 +1,199 @@
+{% extends 'etl_system/base.html' %}
+
+{% block title %}
+{% if form.instance.SRCTBL_ID %}Edit Table Mapping{% else %}Add Table Mapping{% endif %} | ETL Manager
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{% if form.instance.SRCTBL_ID %}Edit Table Mapping{% else %}Add Table Mapping{% endif %}</h1>
+    <a href="{% url 'table_info_list' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to List
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Table Mapping Information</h5>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="row mb-3">
+                
+                <div class="col-md-4">
+                    <label for="{{ form.DATASRC_ID.id_for_label }}" class="form-label">Data Source ID</label>
+                    {{ form.DATASRC_ID }}
+                    {% if form.DATASRC_ID.errors %}
+                    <div class="text-danger">
+                        {% for error in form.DATASRC_ID.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.REF_FRQNCY.id_for_label }}" class="form-label">Refresh Frequency</label>
+                    {{ form.REF_FRQNCY }}
+                    {% if form.REF_FRQNCY.errors %}
+                    <div class="text-danger">
+                        {% for error in form.REF_FRQNCY.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+    
+            </div>
+            
+            <h5 class="mt-4 mb-3">Source Information</h5>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="{{ form.SRC_DATABASE.id_for_label }}" class="form-label">Source Database</label>
+                    {{ form.SRC_DATABASE }}
+                    {% if form.SRC_DATABASE.errors %}
+                    <div class="text-danger">
+                        {% for error in form.SRC_DATABASE.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.SRC_SCHEMA.id_for_label }}" class="form-label">Source Schema</label>
+                    {{ form.SRC_SCHEMA }}
+                    {% if form.SRC_SCHEMA.errors %}
+                    <div class="text-danger">
+                        {% for error in form.SRC_SCHEMA.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.SRC_TABLENAME.id_for_label }}" class="form-label">Source Table Name</label>
+                    {{ form.SRC_TABLENAME }}
+                    {% if form.SRC_TABLENAME.errors %}
+                    <div class="text-danger">
+                        {% for error in form.SRC_TABLENAME.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <h5 class="mt-4 mb-3">Target Information</h5>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="{{ form.TGT_DATABASE.id_for_label }}" class="form-label">Target Database</label>
+                    {{ form.TGT_DATABASE }}
+                    {% if form.TGT_DATABASE.errors %}
+                    <div class="text-danger">
+                        {% for error in form.TGT_DATABASE.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.TGT_SCHEMA.id_for_label }}" class="form-label">Target Schema</label>
+                    {{ form.TGT_SCHEMA }}
+                    {% if form.TGT_SCHEMA.errors %}
+                    <div class="text-danger">
+                        {% for error in form.TGT_SCHEMA.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.TGT_TABLENAME.id_for_label }}" class="form-label">Target Table Name</label>
+                    {{ form.TGT_TABLENAME }}
+                    {% if form.TGT_TABLENAME.errors %}
+                    <div class="text-danger">
+                        {% for error in form.TGT_TABLENAME.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row mb-3">
+                    <div class="col-md-4">
+                    <label for="{{ form.SELECT_QUERY.id_for_label }}" class="form-label">Select Query</label>
+                    {{ form.SELECT_QUERY }}
+                    {% if form.SELECT_QUERY.errors %}
+                    <div class="text-danger">
+                        {% for error in form.SELECT_QUERY.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.FILTER_COND.id_for_label }}" class="form-label">Filter cond</label>
+                    {{ form.FILTER_COND }}
+                    {% if form.FILTER_COND.errors %}
+                    <div class="text-danger">
+                        {% for error in form.FILTER_COND.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.RECON_REQ.id_for_label }}" class="form-label">Recon req</label>
+                    {{ form.RECON_REQ }}
+                    {% if form.RECON_REQ.errors %}
+                    <div class="text-danger">
+                        {% for error in form.RECON_REQ.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row mb-3">
+
+                <div class="col-md-4">
+                    <label for="{{ form.LOAD_TYPE.id_for_label }}" class="form-label">TRG_TABLE_SFX</label>
+                    {{ form.TRG_TABLE_SFX }}
+                    {% if form.TRG_TABLE_SFX.errors %}
+                    <div class="text-danger">
+                        {% for error in form.TRG_TABLE_SFX.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.LOAD_TYPE.id_for_label }}" class="form-label">LOAD TYPE</label>
+                    {{ form.LOAD_TYPE }}
+                    {% if form.LOAD_TYPE.errors %}
+                    <div class="text-danger">
+                        {% for error in form.LOAD_TYPE.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.ACTIVE_IND.id_for_label }}" class="form-label">ACTIVE_IND</label>
+                    {{ form.ACTIVE_IND }}
+                    {% if form.ACTIVE_IND.errors %}
+                    <div class="text-danger">
+                        {% for error in form.ACTIVE_IND.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="{% url 'table_info_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
