@@ -5,11 +5,9 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Database Credentials</h1>
-    {% if perms.etl_system.add_databasecred %}
     <a href="{% url 'database_cred_create' %}" class="btn btn-primary">
         <i class="fas fa-plus"></i> Add Credential
     </a>
-    {% endif %}
 </div>
 
 <div class="card">
@@ -41,16 +39,12 @@
                             <a href="{% url 'database_cred_detail' credential.id %}" class="btn btn-sm btn-info">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            {% if perms.etl_system.change_databasecred %}
                             <a href="{% url 'database_cred_update' credential.id %}" class="btn btn-sm btn-warning">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            {% endif %}
-                            {% if perms.etl_system.delete_databasecred %}
                             <a href="{% url 'database_cred_delete' credential.id %}" class="btn btn-sm btn-danger">
                                 <i class="fas fa-trash"></i>
                             </a>
-                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
@@ -59,7 +53,7 @@
         </div>
         {% else %}
         <div class="alert alert-info">
-            No database credentials found. {% if perms.etl_system.add_databasecred %}<a href="{% url 'database_cred_create' %}">Create one</a>{% endif %}
+            No database credentials found. <a href="{% url 'database_cred_create' %}">Create one</a>
         </div>
         {% endif %}
     </div>

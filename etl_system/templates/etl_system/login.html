@@ -1,15 +1,18 @@
 {% extends 'etl_system/base.html' %}
+{% load static %}
 
 {% block title %}Login | ETL Manager{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="card mt-5">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Login</h4>
+            <!-- Logo Section -->
+            <div class="text-center mt-4">
+                <img src="{% static 'ramachandralogo.png' %}" alt="ETL Manager Logo" class="img-fluid" style="max-height: 80px;">
             </div>
-            <div class="card-body">
+            <!-- Card Body -->
+            <div class="card-body p-4">
                 <form method="post">
                     {% csrf_token %}
                     <div class="mb-3">
@@ -20,7 +23,7 @@
                         <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
                         {{ form.password }}
                     </div>
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
                 </form>
             </div>
         </div>

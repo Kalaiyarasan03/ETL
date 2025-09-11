@@ -9,16 +9,12 @@
         <a href="{% url 'source_file_info_list' %}" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Back to List
         </a>
-        {% if perms.etl_system.change_sourcefileinfo %}
         <a href="{% url 'source_file_info_update' file.SRCFILE_ID %}" class="btn btn-warning">
             <i class="fas fa-edit"></i> Edit
         </a>
-        {% endif %}
-        {% if perms.etl_system.delete_sourcefileinfo %}
         <a href="{% url 'source_file_info_delete' file.SRCFILE_ID %}" class="btn btn-danger">
             <i class="fas fa-trash"></i> Delete
         </a>
-        {% endif %}
     </div>
 </div>
 

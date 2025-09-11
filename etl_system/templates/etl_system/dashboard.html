@@ -118,7 +118,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+                         {% if user.role == 'ADMIN' or user.role == 'MANAGER' %}                        
                         <!-- Right branch: Source Files -->
                         <div class="col-md-4 text-center">
                             <div class="card card-dashboard h-100 border-warning mb-3">
@@ -162,6 +162,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>

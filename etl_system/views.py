@@ -1,7 +1,7 @@
 # etl_system/views.py
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
@@ -127,14 +127,12 @@ def dashboard(request):
 
 # ETL Execution and Data Loading Views
 @login_required
-@permission_required('etl_system.view_sourceinfo', raise_exception=True)
 def etl_execution(request):
     """View to manage ETL execution"""
     sources = source_info.objects.all()
     return render(request, 'etl_system/ETL_Execution/etl_execution.html', {'sources': sources})
 
 @login_required
-@permission_required('etl_system.view_sourceinfo', raise_exception=True)
 def execute_etl(request, datasrc_id):
     """Execute ETL for a specific data source"""
     if request.method == 'POST':
@@ -178,7 +176,6 @@ def execute_etl(request, datasrc_id):
     return redirect('etl_execution')
 
 @login_required
-@permission_required('etl_system.view_tableinfo', raise_exception=True)
 def data_viewer(request):
     """View to display available tables for data viewing"""
     try:
@@ -189,7 +186,6 @@ def data_viewer(request):
         return render(request, 'etl_system/Data_Viewer/data_viewer.html', {'tables': []})
 
 @login_required
-@permission_required('etl_system.view_tableinfo', raise_exception=True)
 def view_table_data(request, table_id):
     """View data from a specific table - Updated to support custom database types"""
     try:
@@ -339,7 +335,6 @@ def view_table_data(request, table_id):
         return redirect('data_viewer')
 
 @login_required
-@permission_required('etl_system.view_tableinfo', raise_exception=True)
 def export_table_data(request, table_id):
     """Export table data to CSV - Updated to support custom database types"""
     try:
@@ -395,11 +390,10 @@ def export_table_data(request, table_id):
         return redirect('data_viewer')
 
 # Execution Track Views (for monitoring ETL executions)
-class ExecutionTrackListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class ExecutionTrackListView(LoginRequiredMixin, ListView):
     model = execution_track
     template_name = 'etl_system/Execution_Track/execution_track_list.html'
     context_object_name = 'executions'
-    permission_required = 'etl_system.view_executiontrack'
     ordering = ['-EXECUTION_DT', 'SRCTBL_ID']
     paginate_by = 50
 
@@ -420,14 +414,12 @@ class ExecutionTrackListView(LoginRequiredMixin, PermissionRequiredMixin, ListVi
             
         return queryset
 
-class ExecutionTrackDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+class ExecutionTrackDetailView(LoginRequiredMixin, DetailView):
     model = execution_track
     template_name = 'etl_system/Execution_Track/execution_track_detail.html'
     context_object_name = 'execution'
-    permission_required = 'etl_system.view_executiontrack'
 
 @login_required
-@permission_required('etl_system.view_executiontrack', raise_exception=True)
 def execution_summary(request):
     """View to show execution summary and statistics"""
     from django.db.models import Count, Sum, Q
@@ -487,25 +479,23 @@ class SourceInfoDetailView(LoginRequiredMixin, DetailView):
     template_name = 'etl_system/Sources_Info/source_info_detail.html'
     context_object_name = 'source'
 
-class SourceInfoCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class SourceInfoCreateView(LoginRequiredMixin, CreateView):
     model = source_info
     form_class = SourceInfoForm
     template_name = 'etl_system/Sources_Info/source_info_form.html'
     success_url = reverse_lazy('source_info_list')
-    permission_required = 'etl_system.add_sourceinfo'
 
-class SourceInfoUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class SourceInfoUpdateView(LoginRequiredMixin, UpdateView):
     model = source_info
     form_class = SourceInfoForm
     template_name = 'etl_system/Sources_Info/source_info_form.html'
     success_url = reverse_lazy('source_info_list')
-    permission_required = 'etl_system.change_sourceinfo'
 
-class SourceInfoDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class SourceInfoDeleteView(LoginRequiredMixin, DeleteView):
     model = source_info
     template_name = 'etl_system/Sources_Info/source_info_confirm_delete.html'
     success_url = reverse_lazy('source_info_list')
-    permission_required = 'etl_system.delete_sourceinfo'
+    
 
 # Table Info Views
 class TableInfoListView(LoginRequiredMixin, ListView):
@@ -518,25 +508,22 @@ class TableInfoDetailView(LoginRequiredMixin, DetailView):
     template_name = 'etl_system/Tables_Info/table_info_detail.html'
     context_object_name = 'table'
 
-class TableInfoCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class TableInfoCreateView(LoginRequiredMixin, CreateView):
     model = srctbl_info
     form_class = TableInfoForm
     template_name = 'etl_system/Tables_Info/table_info_form.html'
     success_url = reverse_lazy('table_info_list')
-    permission_required = 'etl_system.add_tableinfo'
 
-class TableInfoUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class TableInfoUpdateView(LoginRequiredMixin, UpdateView):
     model = srctbl_info
     form_class = TableInfoForm
     template_name = 'etl_system/Tables_Info/table_info_form.html'
     success_url = reverse_lazy('table_info_list')
-    permission_required = 'etl_system.change_tableinfo'
 
-class TableInfoDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class TableInfoDeleteView(LoginRequiredMixin, DeleteView):
     model = srctbl_info
     template_name = 'etl_system/Tables_Info/table_info_confirm_delete.html'
     success_url = reverse_lazy('table_info_list')
-    permission_required = 'etl_system.delete_tableinfo'
 
 # Source File Info Views
 class SourceFileInfoListView(LoginRequiredMixin, ListView):
@@ -549,25 +536,22 @@ class SourceFileInfoDetailView(LoginRequiredMixin, DetailView):
     template_name = 'etl_system/Source_File_Info/source_file_info_detail.html'
     context_object_name = 'file'
 
-class SourceFileInfoCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class SourceFileInfoCreateView(LoginRequiredMixin, CreateView):
     model = srcfile_info
     form_class = SourceFileInfoForm
     template_name = 'etl_system/Source_File_Info/source_file_info_form.html'
     success_url = reverse_lazy('source_file_info_list')
-    permission_required = 'etl_system.add_sourcefileinfo'
 
-class SourceFileInfoUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class SourceFileInfoUpdateView(LoginRequiredMixin, UpdateView):
     model = srcfile_info
     form_class = SourceFileInfoForm
     template_name = 'etl_system/Source_File_Info/source_file_info_form.html'
     success_url = reverse_lazy('source_file_info_list')
-    permission_required = 'etl_system.change_sourcefileinfo'
 
-class SourceFileInfoDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class SourceFileInfoDeleteView(LoginRequiredMixin, DeleteView):
     model = srcfile_info
     template_name = 'etl_system/Source_File_Info/source_file_info_confirm_delete.html'
     success_url = reverse_lazy('source_file_info_list')
-    permission_required = 'etl_system.delete_sourcefileinfo'
 
 # Table Schema Views
 class TableSchemaListView(LoginRequiredMixin, ListView):
@@ -580,55 +564,47 @@ class TableSchemaDetailView(LoginRequiredMixin, DetailView):
     template_name = 'etl_system/Table_Schema/table_schema_detail.html'
     context_object_name = 'schema'
 
-class TableSchemaCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class TableSchemaCreateView(LoginRequiredMixin, CreateView):
     model = table_schema
     form_class = TableSchemaForm
     template_name = 'etl_system/Table_Schema/table_schema_form.html'
     success_url = reverse_lazy('table_schema_list')
-    permission_required = 'etl_system.add_tableschema'
 
-class TableSchemaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class TableSchemaUpdateView(LoginRequiredMixin, UpdateView):
     model = table_schema
     form_class = TableSchemaForm
     template_name = 'etl_system/Table_Schema/table_schema_form.html'
     success_url = reverse_lazy('table_schema_list')
-    permission_required = 'etl_system.change_tableschema'
 
-class TableSchemaDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class TableSchemaDeleteView(LoginRequiredMixin, DeleteView):
     model = table_schema
     template_name = 'etl_system/Table_Schema/table_schema_confirm_delete.html'
     success_url = reverse_lazy('table_schema_list')
-    permission_required = 'etl_system.delete_tableschema'
 
 # Database Credential Views (Admin Only)
-class DatabaseCredListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class DatabaseCredListView(LoginRequiredMixin, ListView):
     model = database_cred
     template_name = 'etl_system/Database_Info/database_cred_list.html'
     context_object_name = 'credentials'
-    permission_required = 'etl_system.view_databasecred'
 
-class DatabaseCredDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+class DatabaseCredDetailView(LoginRequiredMixin, DetailView):
     model = database_cred
     template_name = 'etl_system/Database_Info/database_cred_detail.html'
     context_object_name = 'credential'
-    permission_required = 'etl_system.view_databasecred'
 
-class DatabaseCredCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class DatabaseCredCreateView(LoginRequiredMixin, CreateView):
     model = database_cred
     form_class = DatabaseCredForm
     template_name = 'etl_system/Database_Info/database_cred_form.html'
     success_url = reverse_lazy('database_cred_list')
-    permission_required = 'etl_system.add_databasecred'
 
-class DatabaseCredUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class DatabaseCredUpdateView(LoginRequiredMixin, UpdateView):
     model = database_cred
     form_class = DatabaseCredForm
     template_name = 'etl_system/Database_Info/database_cred_form.html'
     success_url = reverse_lazy('database_cred_list')
-    permission_required = 'etl_system.change_databasecred'
 
-class DatabaseCredDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class DatabaseCredDeleteView(LoginRequiredMixin, DeleteView):
     model = database_cred
     template_name = 'etl_system/Database_Info/database_cred_confirm_delete.html'
     success_url = reverse_lazy('database_cred_list')
-    permission_required = 'etl_system.delete_databasecred'

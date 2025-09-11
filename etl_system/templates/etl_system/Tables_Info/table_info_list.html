@@ -5,11 +5,9 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Table Mappings</h1>
-    {% if perms.etl_system.add_tableinfo %}
     <a href="{% url 'table_info_create' %}" class="btn btn-primary">
         <i class="fas fa-plus"></i> Add Table Mapping
     </a>
-    {% endif %}
 </div>
 
 <div class="card">
@@ -65,7 +63,7 @@
         </div>
         {% else %}
         <div class="alert alert-info">
-            No table mappings found. {% if perms.etl_system.add_tableinfo %}<a href="{% url 'table_info_create' %}">Create one</a>{% endif %}
+            No table mappings found. <a href="{% url 'table_info_create' %}">Create one</a>
         </div>
         {% endif %}
     </div>

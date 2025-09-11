@@ -5,11 +5,9 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Data Sources</h1>
-    {% if perms.etl_system.add_sourceinfo %}
     <a href="{% url 'source_info_create' %}" class="btn btn-primary">
         <i class="fas fa-plus"></i> Add Source
     </a>
-    {% endif %}
 </div>
 
 <div class="card">
@@ -55,7 +53,7 @@
         </div>
         {% else %}
         <div class="alert alert-info">
-            No data sources found. {% if perms.etl_system.add_sourceinfo %}<a href="{% url 'source_info_create' %}">Create one</a>{% endif %}
+            No data sources found. <a href="{% url 'source_info_create' %}">Create one</a>
         </div>
         {% endif %}
     </div>
