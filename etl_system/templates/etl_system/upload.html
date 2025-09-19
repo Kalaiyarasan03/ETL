@@ -1,0 +1,42 @@
+{% extends 'etl_system/base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto p-6">
+  <h1 class="text-2xl font-bold mb-4">Upload Excel to MySQL</h1>
+
+  <div class="card shadow p-4">
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <div class="mb-3">
+      <label class="form-label">Excel / CSV file</label>
+      {{ form.file|add_class:"form-control" }}
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Table name</label>
+      {{ form.table_name|add_class:"form-control" }}
+    </div>
+
+    <button class="btn btn-success">Upload</button>
+  </form>
+</div>
+
+  {% if error %}
+    <div class="mt-4 p-4 bg-red-100 text-red-800 rounded">{{ error }}</div>
+  {% endif %}
+
+  {% if success and result %}
+    <div class="mt-4 p-4 bg-green-100 text-green-800 rounded">
+      <div class="font-semibold">Success!</div>
+      <div>Table: <strong>{{ result.table }}</strong></div>
+      <div>Created new table: <strong>{{ result.created }}</strong></div>
+      <div>Rows inserted: <strong>{{ result.rows_inserted }}</strong></div>
+      <div>Columns count: <strong>{{ result.columns_count }}</strong></div>
+      <div>Columns: <code>{{ result.columns }}</code></div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -65,40 +65,45 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <img src="{% static 'ramachandralogo.png' %}" alt="ETL Manager Logo" class="me-3" style="height: 35px;" title="ETL Manager Home">
-        <a class="navbar-brand" href="{% url 'dashboard' %}">ETL Manager</a>
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'dashboard' %}">
+            <img src="{% static 'ramachandralogo.png' %}" alt="ETL Manager Logo" style="height: 35px;" class="me-2">
+            ETL Manager
+        </a>
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
-                </li>
-            </ul>
             {% if user.is_authenticated %}
-            <span class="navbar-text me-3">
-                Welcome, {{ user.username }}
-                (
-                {% if is_admin %}
-                    Admin
-                {% elif is_manager %}
-                    Manager
-                {% else %}
-                    Engineer
-                {% endif %}
-                )
-            </span>
-            <form method="post" action="{% url 'logout' %}" class="d-inline">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-light">Logout</button>
-            </form>
-            {% else %}
-                <a href="{% url 'login' %}" class="btn btn-outline-light">Login</a>
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
+                    </li>
+                </ul>
+
+                <span class="navbar-text me-3">
+                    Welcome, {{ user.username }}
+                    (
+                    {% if user.role == 'ADMIN' %}
+                        Admin
+                    {% elif user.role == 'MANAGER' %}
+                        Manager
+                    {% else %}
+                        Engineer
+                    {% endif %}
+                    )
+                </span>
+
+                <form method="post" action="{% url 'logout' %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+                </form>
             {% endif %}
         </div>
     </div>
 </nav>
+
 
 <div class="container-fluid">
     <div class="row">
@@ -140,6 +145,11 @@
                 <a href="{% url 'user_list' %}" class="{% if 'users' in request.path %}active{% endif %}">
                     <i class="fas fa-users me-2"></i> Manage Users
                 </a>
+                <a href="{% url 'excel_to_sql:upload_excel' %}" class="{% if request.resolver_match.url_name == 'upload_excel' and request.resolver_match.namespace == 'excel_to_sql' %}active{% endif %}">
+                    <i class="fas fa-file-excel me-2"></i> Excel To Sql
+                </a>
+
+
                 {% endif %}
             </div>
         </div>
@@ -176,7 +186,7 @@
     }
 
     // Function to hide loading spinner
-    function hideLoading(element) {
+    function hideLoading(element) {_excel
         const spinner = element.querySelector('.loading-spinner');
         if (spinner) {
             spinner.style.display = 'none';

@@ -402,9 +402,6 @@ def is_already_loaded(metadata_engine, srctbl_id):
     else:
         return False, None
 
-
-
-
 def main(datasrc_id):
     metadata_conn_str =  "mysql+pymysql://root:Mani414+++@localhost:3306/test"
     metadata_engine = create_engine(metadata_conn_str)

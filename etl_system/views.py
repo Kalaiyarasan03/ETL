@@ -17,6 +17,8 @@ from datetime import datetime, timedelta, date
 from urllib.parse import quote_plus
 from .models import source_info, srctbl_info, srcfile_info, table_schema, database_cred, execution_track
 from .forms import SourceInfoForm, TableInfoForm, SourceFileInfoForm, TableSchemaForm, DatabaseCredForm, ExecutionTrackForm
+from django.contrib.auth.decorators import user_passes_test
+
 
 def get_actual_db_engine_type(db_type):
     """
@@ -581,30 +583,36 @@ class TableSchemaDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'etl_system/Table_Schema/table_schema_confirm_delete.html'
     success_url = reverse_lazy('table_schema_list')
 
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
+class AdminOnlyMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.role == 'ADMIN'
+
 # Database Credential Views (Admin Only)
-class DatabaseCredListView(LoginRequiredMixin, ListView):
+class DatabaseCredListView(LoginRequiredMixin, AdminOnlyMixin, ListView):
     model = database_cred
     template_name = 'etl_system/Database_Info/database_cred_list.html'
     context_object_name = 'credentials'
 
-class DatabaseCredDetailView(LoginRequiredMixin, DetailView):
+class DatabaseCredDetailView(LoginRequiredMixin, AdminOnlyMixin, DetailView):
     model = database_cred
     template_name = 'etl_system/Database_Info/database_cred_detail.html'
     context_object_name = 'credential'
 
-class DatabaseCredCreateView(LoginRequiredMixin, CreateView):
+class DatabaseCredCreateView(LoginRequiredMixin, AdminOnlyMixin, CreateView):
     model = database_cred
     form_class = DatabaseCredForm
     template_name = 'etl_system/Database_Info/database_cred_form.html'
     success_url = reverse_lazy('database_cred_list')
 
-class DatabaseCredUpdateView(LoginRequiredMixin, UpdateView):
+class DatabaseCredUpdateView(LoginRequiredMixin, AdminOnlyMixin, UpdateView):
     model = database_cred
     form_class = DatabaseCredForm
     template_name = 'etl_system/Database_Info/database_cred_form.html'
     success_url = reverse_lazy('database_cred_list')
 
-class DatabaseCredDeleteView(LoginRequiredMixin, DeleteView):
+class DatabaseCredDeleteView(LoginRequiredMixin, AdminOnlyMixin, DeleteView):
     model = database_cred
     template_name = 'etl_system/Database_Info/database_cred_confirm_delete.html'
     success_url = reverse_lazy('database_cred_list')

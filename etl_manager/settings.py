@@ -29,6 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'etl_system',
     'accounts',
+    'excel_to_sql',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
